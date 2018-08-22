@@ -1,21 +1,56 @@
-const url1: string = 'https://my.api.mockaroo.com/timetask.json?key=6cd5c210';
-const url2: string = 'https://my.api.mockaroo.com/vacation.json?key=6cd5c210';
-
+/**
+ * Интерфейс для задач, которые должны запускаться параллельно
+ */
 interface IParallel {
+    /**
+     * Запуск выполнения задачи
+     */
     run(): void;
+
+    /**
+     * Возвращает статус готовности
+     */
     isReady(): boolean;
+
+    /**
+     * Возвращает статус запущенности
+     */
     isRunned(): boolean;
+
+    /**
+     * Возвращает идентификатор задачи
+     */
     getId(): string;
+
+    /**
+     * Устанавливает иденитификатор задачи
+     * @param id 
+     */
     setId(id: string): void;
+
+    /**
+     * Возвращает результат работы задачи
+     */
     getResult(): any;
 }
 
+/**
+ * Интерфейс ассоциативного массива
+ */
 interface Map<T> {
     [K: string]: T;
 }
 
+/**
+ * Отдельный тип для CallBack функции задачи
+ */
 type AsyncFetcherCallbackFn = (response: any) => void;
 
+/**
+ * Класс получения данных по URL адресу
+ * 
+ * Использован как пример задачи
+ */
 class AsyncFetcher implements IParallel {
     private _ready: boolean;
     private _runned: boolean;
@@ -89,6 +124,9 @@ class AsyncFetcher implements IParallel {
     }
 }
 
+/**
+ * Класс контроллера параллельных задач
+ */
 class ParallelTask {
     private _tasks: Array<IParallel> = [];
     private _runned: Array<IParallel> = [];
@@ -186,6 +224,16 @@ class ParallelTask {
     }
 }
 
+/**
+ * URL для тестирования
+ */
+const url1: string = 'https://my.api.mockaroo.com/timetask.json?key=6cd5c210';
+const url2: string = 'https://my.api.mockaroo.com/vacation.json?key=6cd5c210';
+
+/**
+ * Создадим 5 задач для 5 потоков
+ * У одной задачи будет отдельный CallBack по завершению
+ */
 let af1 = new AsyncFetcher(url1);
 let af2 = new AsyncFetcher(url2);
 let af3 = new AsyncFetcher(url1);
@@ -194,6 +242,10 @@ let af4 = new AsyncFetcher(url2).onReady((resp: any) => {
 });
 let af5 = new AsyncFetcher(url2);
 
+/**
+ * Создадим экземпляр класса контроллера параллельных процессов
+ * с CallBack функцией, которая отработает по завершению всех процессов
+ */
 let ll = new ParallelTask(() => {
     console.log('Finished', af1, af2, af3);
 })
