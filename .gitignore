@@ -1,0 +1,14 @@
+# Ignore .idea folder
+.idea/
+
+# Ignore .*-cache folders
+.*-cache/
+
+# Ignore .vs* folders
+.vs*
+
+# Ignore node_modules folder
+node_modules
+
+# Ignore package-lock.json file
+package-lock.json
